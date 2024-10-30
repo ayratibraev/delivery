@@ -39,7 +39,7 @@ public class Location : ValueObject
     public static Result<Location, Error> Create(int x, int y)
     {
         if(x < Min.X || x > Max.X) return GeneralErrors.ValueIsInvalid(nameof(x));
-        if(x < Min.Y || x > Max.Y) return GeneralErrors.ValueIsInvalid(nameof(y));
+        if(y < Min.Y || y > Max.Y) return GeneralErrors.ValueIsInvalid(nameof(y));
         
         return new Location(x, y);
     }
