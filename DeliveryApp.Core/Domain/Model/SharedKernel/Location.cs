@@ -20,7 +20,6 @@ public class Location : ValueObject
     public static readonly Location Max = new(10, 10);
 
 
-    
     [ExcludeFromCodeCoverage]
     private Location() { }
     
@@ -29,7 +28,7 @@ public class Location : ValueObject
         X = x;
         Y = y;
     }
-    
+
     public int X { get; }
 
     public int Y { get; }
@@ -38,17 +37,21 @@ public class Location : ValueObject
     /// <param name="y">Вертикаль</param>
     public static Result<Location, Error> Create(int x, int y)
     {
-        if(x < Min.X || x > Max.X) return GeneralErrors.ValueIsInvalid(nameof(x));
-        if(y < Min.Y || y > Max.Y) return GeneralErrors.ValueIsInvalid(nameof(y));
-        
+        if (x < Min.X || x > Max.X) return GeneralErrors.ValueIsInvalid(nameof(x));
+        if (y < Min.Y || y > Max.Y) return GeneralErrors.ValueIsInvalid(nameof(y));
+
         return new Location(x, y);
     }
-    
+
     /// <summary>
-    ///     Посчитать расстояние между координатами  
+    ///     Посчитать расстояние между координатами
     /// </summary>
-    public int DistanceTo(Location targetLocation) 
-        => Math.Abs(X - targetLocation.X) + Math.Abs(Y - targetLocation.Y);
+    public Result<int, Error> DistanceTo(Location targetLocation)
+    {
+        if (targetLocation is null) return GeneralErrors.ValueIsRequired(nameof(targetLocation));
+
+        return Math.Abs(X - targetLocation.X) + Math.Abs(Y - targetLocation.Y);
+    }
 
     /// <summary>
     ///     Сгенерировать случайную координату. Используется в целях тестирования
@@ -59,7 +62,7 @@ public class Location : ValueObject
             Random.Shared.Next(Min.X, Max.X),
             Random.Shared.Next(Min.Y, Max.Y));
     }
-    
+
     /// <summary>
     ///     Перегрузка для определения идентичности
     /// </summary>

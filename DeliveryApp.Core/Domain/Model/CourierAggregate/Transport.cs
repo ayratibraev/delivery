@@ -55,12 +55,12 @@ public class Transport : Entity<int>
     /// </summary>
     /// <param name="name">Название</param>
     /// <returns>Результат</returns>
-    public Result<object, Error> SetName(string name)
+    public UnitResult<Error> SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name)) return GeneralErrors.ValueIsRequired(nameof(name));
 
         Name = name;
-        return new object();
+        return UnitResult.Success<Error>();
     }
     
     /// <summary>
@@ -68,12 +68,12 @@ public class Transport : Entity<int>
     /// </summary>
     /// <param name="speed">Скорость</param>
     /// <returns>Результат</returns>
-    public Result<object, Error> SetSpeed(int speed)
+    public UnitResult<Error> SetSpeed(int speed)
     {
         if (speed <= 0) return GeneralErrors.ValueIsInvalid(nameof(speed));
 
         Speed = speed;
-        return new object();
+        return UnitResult.Success<Error>();
     }
     
     public static Result<Transport, Error> FromId(int id)
