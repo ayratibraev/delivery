@@ -13,17 +13,12 @@ public class Order : Aggregate
     {
     }
 
-    public Order(Guid id, Location location) : base(id)
+    private Order(Guid id, Location location) : base(id)
     {
         Id       = id;
         Location = location;
         Status   = OrderStatus.Created;
     }
-
-    /// <summary>
-    ///     Идентификатор
-    /// </summary>
-    public Guid Id { get; private set; }
 
     /// <summary>
     ///     Местоположение, куда нужно доставить заказ
