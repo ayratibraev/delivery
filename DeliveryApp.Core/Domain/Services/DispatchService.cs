@@ -14,22 +14,9 @@ public class DispatchService : IDispatchService
         if (order is null) return GeneralErrors.ValueIsRequired(nameof(order));
         if (couriers is null) return GeneralErrors.ValueIsRequired(nameof(couriers));
 
-        Courier fastestCourier = null;
-        var minTime = double.MaxValue;
-
-        foreach (var courier in couriers.Where(c => c.Status == CourierStatus.Free))
-        {
-            var calculateTimeToPointResult = courier.CalculateTimeToPoint(order.Location);
-
-            if (calculateTimeToPointResult.IsFailure) continue;
-
-            var timeToPoint = calculateTimeToPointResult.Value;
-            if (timeToPoint < minTime)
-            {
-                fastestCourier = courier;
-                minTime = timeToPoint;
-            }
-        }
+        var fastestCourier = couriers
+           .Where(c => c.Status == CourierStatus.Free)
+           .MinBy(c => c.CalculateTimeToPoint(order.Location).Value);
 
         if (fastestCourier is null) return Errors.CourierWasNotFound();
 
