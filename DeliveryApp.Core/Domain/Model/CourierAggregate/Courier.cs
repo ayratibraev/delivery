@@ -5,7 +5,7 @@ using Primitives;
 
 namespace DeliveryApp.Core.Domain.Model.CourierAggregate;
 
-public class Courier
+public class Courier : Aggregate
 {
     [ExcludeFromCodeCoverage]
     private Courier()
