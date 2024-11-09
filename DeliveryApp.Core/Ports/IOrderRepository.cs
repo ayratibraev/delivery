@@ -13,7 +13,7 @@ public interface IOrderRepository : IRepository<Order>
     /// </summary>
     /// <param name="order">Заказ</param>
     /// <returns>Заказ</returns>
-    Task Add(Order order);
+    Task AddAsync(Order order);
 
     /// <summary>
     ///     Обновить
@@ -26,7 +26,7 @@ public interface IOrderRepository : IRepository<Order>
     /// </summary>
     /// <param name="orderId">Идентификатор</param>
     /// <returns>Заказ</returns>
-    Task<Order> Get(Guid orderId);
+    Task<Order> GetAsync(Guid orderId);
 
     /// <summary>
     ///     Получить все новые заказы

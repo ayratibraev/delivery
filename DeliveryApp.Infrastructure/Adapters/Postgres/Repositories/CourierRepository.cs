@@ -13,7 +13,7 @@ public class CourierRepository : ICourierRepository
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
-    public async Task Add(Courier courier)
+    public async Task AddAsync(Courier courier)
     {
         if (courier.Transport is not null) _dbContext.Attach(courier.Transport);
         if (courier.Status is not null) _dbContext.Attach(courier.Status);
@@ -29,7 +29,7 @@ public class CourierRepository : ICourierRepository
         _dbContext.Couriers.Update(courier);
     }
 
-    public Task<Courier> Get(Guid courierId) =>
+    public Task<Courier> GetAsync(Guid courierId) =>
         _dbContext
            .Couriers
            .Include(x => x.Transport)

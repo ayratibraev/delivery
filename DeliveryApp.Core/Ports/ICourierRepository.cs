@@ -13,7 +13,7 @@ public interface ICourierRepository : IRepository<Courier>
     /// </summary>
     /// <param name="courier">Курьер</param>
     /// <returns>Курьер</returns>
-    Task Add(Courier courier);
+    Task AddAsync(Courier courier);
 
     /// <summary>
     ///     Обновить
@@ -26,7 +26,7 @@ public interface ICourierRepository : IRepository<Courier>
     /// </summary>
     /// <param name="courierId">Идентификатор</param>
     /// <returns>Курьер</returns>
-    Task<Courier> Get(Guid courierId);
+    Task<Courier> GetAsync(Guid courierId);
 
     /// <summary>
     ///     Получить всех свободных курьеров
