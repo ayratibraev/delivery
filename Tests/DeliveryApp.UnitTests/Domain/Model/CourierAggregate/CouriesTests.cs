@@ -85,7 +85,7 @@ public class CourierShould
         // Arrange
         var name      = "John Doe";
         var transport = Transport.Car;
-        var location  = Location.CreateRandom();
+        var location  = (Location?)null;
 
         // Act
         var result = Courier.Create(name, transport, location);
@@ -148,14 +148,14 @@ public class CourierShould
     {
         // Arrange
         var       courier  = Courier.Create("John Doe", Transport.Bicycle, Location.CreateRandom()).Value;
-        Location? location = null;
+        Location? targetLocation = null;
         
         // Act
-        var result = courier.Move(location);
+        var result = courier.Move(targetLocation);
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(GeneralErrors.ValueIsRequired(nameof(location)), result.Error);
+        Assert.Equal(GeneralErrors.ValueIsRequired(nameof(targetLocation)), result.Error);
     }
     
     [Fact]
@@ -238,14 +238,15 @@ public class CourierShould
     {
         // Arrange
         var courier = Courier.Create("John Doe", Transport.Bicycle, Location.Create(5, 5).Value).Value;
-        var targetLocation = Location.Create(15, 15).Value;
+        var targetLocation = Location.Create(8, 8).Value;
 
         // Act
         var result = courier.Move(targetLocation);
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(Location.Create(5 + Transport.Bicycle.Speed, 5 + Transport.Bicycle.Speed).Value, courier.Location);
+        Assert.Equal(7, courier.Location.X);
+        Assert.Equal(5, courier.Location.Y);
     }
     
     #endregion
