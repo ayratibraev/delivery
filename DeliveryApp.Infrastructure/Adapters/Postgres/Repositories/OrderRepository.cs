@@ -13,7 +13,7 @@ public class OrderRepository : IOrderRepository
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
-    public async Task Add(Order order)
+    public async Task AddAsync(Order order)
     {
         if (order.Status is not null) _dbContext.Attach(order.Status);
 
@@ -27,7 +27,7 @@ public class OrderRepository : IOrderRepository
         _dbContext.Orders.Update(order);
     }
 
-    public Task<Order> Get(Guid orderId) =>
+    public Task<Order> GetAsync(Guid orderId) =>
         _dbContext
            .Orders
            .Include(x => x.Status)
