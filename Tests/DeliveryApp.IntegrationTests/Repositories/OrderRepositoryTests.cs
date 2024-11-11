@@ -152,12 +152,11 @@ public class OrderRepositoryShould : IAsyncLifetime
         await unitOfWork.SaveChangesAsync();
 
         //Act
-        var activeOrdersFromDb = orderRepository.GetAllCreated();
+        var activeOrdersFromDb = await orderRepository.GetAllCreated();
 
         //Assert
-        var ordersFromDb = activeOrdersFromDb.ToList();
-        ordersFromDb.Should().NotBeEmpty();
-        ordersFromDb.Count().Should().Be(1);
-        ordersFromDb.First().Should().BeEquivalentTo(order2);
+        activeOrdersFromDb.Should().NotBeEmpty();
+        activeOrdersFromDb.Count.Should().Be(1);
+        activeOrdersFromDb[0].Should().BeEquivalentTo(order2);
     }
 }

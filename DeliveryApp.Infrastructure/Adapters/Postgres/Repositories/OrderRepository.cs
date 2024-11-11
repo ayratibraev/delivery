@@ -33,15 +33,17 @@ public class OrderRepository : IOrderRepository
            .Include(x => x.Status)
            .SingleOrDefaultAsync(o => o.Id == orderId);
 
-    public IEnumerable<Order> GetAllCreated() =>
+    public Task<List<Order>> GetAllCreated() =>
         _dbContext
            .Orders
            .Include(x => x.Status)
-           .Where(o => o.Status == OrderStatus.Created);
+           .Where(o => o.Status == OrderStatus.Created)
+           .ToListAsync();
 
-    public IEnumerable<Order> GetAllAssigned() =>
+    public Task<List<Order>> GetAllAssigned() =>
         _dbContext
            .Orders
            .Include(x => x.Status)
-           .Where(o => o.Status == OrderStatus.Assigned);
+           .Where(o => o.Status == OrderStatus.Assigned)
+           .ToListAsync();
 }
