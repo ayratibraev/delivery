@@ -26,7 +26,7 @@ public class MoveCouriersHandler : IRequestHandler<MoveCouriersCommand, bool>
     public async Task<bool> Handle(MoveCouriersCommand message, CancellationToken cancellationToken)
     {
         // Получаем агрегаты
-        var assignedOrders = _orderRepository.GetAllAssigned().ToList();
+        var assignedOrders = await _orderRepository.GetAllAssigned();
         if (assignedOrders.Count == 0)
             return false;
 

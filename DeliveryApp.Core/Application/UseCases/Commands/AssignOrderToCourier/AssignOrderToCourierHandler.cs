@@ -33,7 +33,8 @@ public class AssignOrderToCourierHandler : IRequestHandler<AssignOrderToCourierC
     public async Task<bool> Handle(AssignOrderToCourierCommand message, CancellationToken cancellationToken)
     {
         // Получаем агрегаты
-        var order = _orderRepository.GetAllCreated().FirstOrDefault();
+        var orders = await _orderRepository.GetAllCreated();
+        var order  = orders.FirstOrDefault();
         if (order == null) return false;
         
         var couriers = _courierRepository.GetAllFree().ToList();
