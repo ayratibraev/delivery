@@ -1,4 +1,6 @@
 using DeliveryApp.Core.Domain.Services;
+using DeliveryApp.Infrastructure.Adapters.Postgres;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryApp.Api;
 
@@ -9,6 +11,7 @@ public class Startup
         var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddEnvironmentVariables();
+        
         var configuration = builder.Build();
         Configuration = configuration;
     }
@@ -38,6 +41,14 @@ public class Startup
         var connectionString = Configuration["CONNECTION_STRING"];
         var geoServiceGrpcHost = Configuration["GEO_SERVICE_GRPC_HOST"];
         var messageBrokerHost = Configuration["MESSAGE_BROKER_HOST"];
+        
+        services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseNpgsql(connectionString,
+                    sqlOptions => { sqlOptions.MigrationsAssembly("DeliveryApp.Infrastructure"); });
+                options.EnableSensitiveDataLogging();
+            }
+        );
 
         // Domain Services
         services.AddTransient<IDispatchService, DispatchService>();

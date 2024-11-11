@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DeliveryApp.UnitTests.Domain.Model.CourierAggregate;
 
-public class TransportShould
+public class TransportTests
 {
     public static IEnumerable<object[]> GetTransports()
     {
