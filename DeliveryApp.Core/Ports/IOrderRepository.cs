@@ -32,11 +32,11 @@ public interface IOrderRepository : IRepository<Order>
     ///     Получить все новые заказы
     /// </summary>
     /// <returns>Заказы</returns>
-    IEnumerable<Order> GetAllCreated();
+    Task<List<Order>> GetAllCreated();
 
     /// <summary>
     ///     Получить все назначенные заказы
     /// </summary>
     /// <returns>Заказы</returns>
-    IEnumerable<Order> GetAllAssigned();
+    Task<List<Order>> GetAllAssigned();
 }
