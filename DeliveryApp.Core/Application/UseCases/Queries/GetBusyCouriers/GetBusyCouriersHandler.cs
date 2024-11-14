@@ -22,22 +22,22 @@ public class GetBusyCouriersHandler : IRequestHandler<GetBusyCouriersQuery, GetB
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
         
-        var result = await connection.QueryAsync(
-            @"SELECT id, name, location_x, location_y, status_id, transport_id FROM public.couriers where status_id=@status_id"
-            , new { status_id = CourierStatus.Busy.Id});
+        var query =
+            @"SELECT id as Id,
+                name as Name,
+                status_id as StatusId,
+                transport_id as TransportId,
+                location_x as X,
+                location_y as Y
+            FROM public.couriers where status_id=@status_id;";
+        
+        var couriers = await connection.QueryAsync<Courier, Location, Courier>(query, (courier, location) => {
+                courier.Location = location;
+                return courier;
+            },
+            new { status_id = CourierStatus.Busy.Id},
+            splitOn: "X" );
 
-        List<Courier> couriers = result
-           .Select<dynamic, Courier>(item => MapToCourier(item))
-           .ToList();
-
-        return new GetBusyCouriersResponse(couriers);
-    }
-
-    private Courier MapToCourier(dynamic result)
-    {
-        var location = new Location { X = result.location_x, Y = result.location_y };
-        var courier = new Courier
-            { Id = result.id, Name = result.name, Location = location, TransportId = result.transport_id };
-        return courier;
+        return new GetBusyCouriersResponse(couriers.ToList());
     }
 }

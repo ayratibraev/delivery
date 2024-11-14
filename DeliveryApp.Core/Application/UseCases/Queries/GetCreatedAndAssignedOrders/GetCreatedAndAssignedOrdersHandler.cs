@@ -21,23 +21,22 @@ public class GetCreatedAndAssignedOrdersHandler : IRequestHandler<GetCreatedAndA
     {
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
+        
+        var query =
+            @"SELECT id, 
+                    courier_id as CourierId,
+                    status_id as StatusId,
+                    location_x as X,
+                    location_y as Y
+             FROM public.orders where status_id!=@status_id;";
+        
+        var couriers = await connection.QueryAsync<Order, Location, Order>(query, (order, location) => {
+                order.Location = location;
+                return order;
+            },
+            new { status_id = OrderStatus.Completed.Id},
+            splitOn: "X" );
 
-        var result = await connection.QueryAsync<dynamic>(
-            @"SELECT id, courier_id, location_x, location_y, status_id FROM public.orders where status_id!=@status_id;"
-            , new { status_id = OrderStatus.Completed.Id });
-
-        List<Order> orders = result
-           .Select<dynamic, Order>(item => MapToOrder(item))
-           .ToList();
-
-        return new GetCreatedAndAssignedOrdersResponse(orders);
+        return new GetCreatedAndAssignedOrdersResponse(couriers.ToList());
     }
-
-    private Order MapToOrder(dynamic result)
-    {
-        var location = new Location { X = result.location_x, Y = result.location_y };
-        var order    = new Order { Id   = result.id, Location  = location };
-        return order;
-    }
-
 }
