@@ -1,6 +1,10 @@
+using System.Reflection;
 using DeliveryApp.Core.Domain.Services;
+using DeliveryApp.Core.Ports;
 using DeliveryApp.Infrastructure.Adapters.Postgres;
+using DeliveryApp.Infrastructure.Adapters.Postgres.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Primitives;
 
 namespace DeliveryApp.Api;
 
@@ -49,6 +53,16 @@ public class Startup
                 options.EnableSensitiveDataLogging();
             }
         );
+
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        
+        // UnitOfWork
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Repositories
+        services.AddScoped<ICourierRepository, CourierRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+
 
         // Domain Services
         services.AddTransient<IDispatchService, DispatchService>();
