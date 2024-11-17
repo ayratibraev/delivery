@@ -3,12 +3,13 @@ using DeliveryApp.Core.Ports;
 using MediatR;
 using Primitives;
 
-namespace DeliveryApp.Core.Application.UseCases.Commands.AssignOrderToCourier;
+namespace DeliveryApp.Core.Application.UseCases.Commands.AssignOrders;
 
 /// <summary>
 ///     Назначить заказ на курьера. Обработчик
+///     Command: <see cref="AssignOrdersCommand"/>
 /// </summary>
-public class AssignOrderToCourierHandler : IRequestHandler<AssignOrderToCourierCommand, bool>
+public class AssignOrdersHandler : IRequestHandler<AssignOrdersCommand, bool>
 {
     private readonly ICourierRepository _courierRepository;
     private readonly IOrderRepository _orderRepository;
@@ -18,7 +19,7 @@ public class AssignOrderToCourierHandler : IRequestHandler<AssignOrderToCourierC
     /// <summary>
     ///     Ctr
     /// </summary>
-    public AssignOrderToCourierHandler(
+    public AssignOrdersHandler(
         IOrderRepository orderRepository,
         ICourierRepository courierRepository,
         IUnitOfWork unitOfWork,
@@ -30,7 +31,7 @@ public class AssignOrderToCourierHandler : IRequestHandler<AssignOrderToCourierC
         _dispatchService   = dispatchService ?? throw new ArgumentNullException(nameof(dispatchService));
     }
 
-    public async Task<bool> Handle(AssignOrderToCourierCommand message, CancellationToken cancellationToken)
+    public async Task<bool> Handle(AssignOrdersCommand message, CancellationToken cancellationToken)
     {
         // Получаем агрегаты
         var orders = await _orderRepository.GetAllCreated();
