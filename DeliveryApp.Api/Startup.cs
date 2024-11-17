@@ -1,10 +1,12 @@
 using System.Reflection;
+using DeliveryApp.Api.Adapters.BackgroundJobs;
 using DeliveryApp.Core.Domain.Services;
 using DeliveryApp.Core.Ports;
 using DeliveryApp.Infrastructure.Adapters.Postgres;
 using DeliveryApp.Infrastructure.Adapters.Postgres.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Primitives;
+using Quartz;
 
 namespace DeliveryApp.Api;
 
@@ -66,6 +68,28 @@ public class Startup
 
         // Domain Services
         services.AddTransient<IDispatchService, DispatchService>();
+        
+        // CRON Jobs
+        services.AddQuartz(configure =>
+        {
+            var assignOrdersJobKey = new JobKey(nameof(AssignOrdersJob));
+            var moveCouriersJobKey = new JobKey(nameof(MoveCouriersJob));
+            configure
+               .AddJob<AssignOrdersJob>(assignOrdersJobKey)
+               .AddTrigger(
+                    trigger => trigger.ForJob(assignOrdersJobKey)
+                       .WithSimpleSchedule(
+                            schedule => schedule.WithIntervalInSeconds(1)
+                               .RepeatForever()))
+               .AddJob<MoveCouriersJob>(moveCouriersJobKey)
+               .AddTrigger(
+                    trigger => trigger.ForJob(moveCouriersJobKey)
+                       .WithSimpleSchedule(
+                            schedule => schedule.WithIntervalInSeconds(2)
+                               .RepeatForever()));
+            configure.UseMicrosoftDependencyInjectionJobFactory();
+        });
+        services.AddQuartzHostedService();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

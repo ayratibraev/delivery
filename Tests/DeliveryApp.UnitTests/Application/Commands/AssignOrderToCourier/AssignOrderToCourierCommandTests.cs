@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using DeliveryApp.Core.Application.UseCases.Commands.AssignOrderToCourier;
+using DeliveryApp.Core.Application.UseCases.Commands.AssignOrders;
 using DeliveryApp.Core.Domain.Model.CourierAggregate;
 using DeliveryApp.Core.Domain.Model.OrderAggregate;
 using DeliveryApp.Core.Domain.Model.SharedKernel;
@@ -41,8 +41,8 @@ public class AssignOrderToCourierCommandShould
             .Returns(new List<Order>());
 
         // Act
-        var command = new AssignOrderToCourierCommand();
-        var handler = new AssignOrderToCourierHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
+        var command = new AssignOrdersCommand();
+        var handler = new AssignOrdersHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
         var result  = await handler.Handle(command, new CancellationToken());
 
         // Assert
@@ -60,8 +60,8 @@ public class AssignOrderToCourierCommandShould
            .Returns([]);
 
         // Act
-        var command = new AssignOrderToCourierCommand();
-        var handler = new AssignOrderToCourierHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
+        var command = new AssignOrdersCommand();
+        var handler = new AssignOrdersHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
         var result  = await handler.Handle(command, new CancellationToken());
 
         // Assert
@@ -82,8 +82,8 @@ public class AssignOrderToCourierCommandShould
            .Returns(Result.Failure<Courier, Error>(DispatchService.Errors.CourierWasNotFound()));
 
         // Act
-        var command = new AssignOrderToCourierCommand();
-        var handler = new AssignOrderToCourierHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
+        var command = new AssignOrdersCommand();
+        var handler = new AssignOrdersHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
         var result  = await handler.Handle(command, new CancellationToken());
 
         // Assert
@@ -112,8 +112,8 @@ public class AssignOrderToCourierCommandShould
             .Returns(Task.FromResult(true));
 
         // Act
-        var command = new AssignOrderToCourierCommand();
-        var handler = new AssignOrderToCourierHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
+        var command = new AssignOrdersCommand();
+        var handler = new AssignOrdersHandler(_orderRepositoryMock, _courierRepositoryMock, _unitOfWorkMock, _dispatchServiceMock);
         var result  = await handler.Handle(command, new CancellationToken());
 
         // Assert
