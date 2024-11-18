@@ -4,10 +4,10 @@ public class GetCreatedAndAssignedOrdersResponse
 {
     public GetCreatedAndAssignedOrdersResponse(List<Order> orders)
     {
-        Orders.AddRange(orders);
+        Orders = orders;
     }
 
-    public List<Order> Orders { get; set; } = new();
+    public IReadOnlyCollection<Order> Orders { get; set; }
 }
 
 public class Order
