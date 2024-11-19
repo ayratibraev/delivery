@@ -1,22 +1,21 @@
 ﻿using Dapper;
-using DeliveryApp.Core.Domain.Model.CourierAggregate;
 using MediatR;
 using Npgsql;
 
-namespace DeliveryApp.Core.Application.UseCases.Queries.GetBusyCouriers;
+namespace DeliveryApp.Core.Application.UseCases.Queries.GetCouriers;
 
-public class GetBusyCouriersHandler : IRequestHandler<GetBusyCouriersQuery, GetBusyCouriersResponse>
+public class GetCouriersHandler : IRequestHandler<GetCouriersQuery, GetCouriersResponse>
 {
     private readonly string _connectionString;
 
-    public GetBusyCouriersHandler(string connectionString)
+    public GetCouriersHandler(string connectionString)
     {
         _connectionString = !string.IsNullOrWhiteSpace(connectionString)
             ? connectionString
             : throw new ArgumentNullException(nameof(connectionString));
     }
 
-    public async Task<GetBusyCouriersResponse> Handle(GetBusyCouriersQuery message,
+    public async Task<GetCouriersResponse> Handle(GetCouriersQuery message,
                                                       CancellationToken cancellationToken)
     {
         await using var connection = new NpgsqlConnection(_connectionString);
@@ -29,15 +28,15 @@ public class GetBusyCouriersHandler : IRequestHandler<GetBusyCouriersQuery, GetB
                 transport_id as TransportId,
                 location_x as X,
                 location_y as Y
-            FROM public.couriers where status_id=@status_id;";
+            FROM public.couriers";
         
         var couriers = await connection.QueryAsync<Courier, Location, Courier>(query, (courier, location) => {
                 courier.Location = location;
                 return courier;
             },
-            new { status_id = CourierStatus.Busy.Id},
+            new { },
             splitOn: "X" );
 
-        return new GetBusyCouriersResponse(couriers.ToList());
+        return new GetCouriersResponse(couriers.ToList());
     }
 }

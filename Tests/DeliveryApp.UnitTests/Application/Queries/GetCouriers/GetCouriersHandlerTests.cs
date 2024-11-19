@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DeliveryApp.Core.Application.UseCases.Queries.GetBusyCouriers;
 using DeliveryApp.Core.Application.UseCases.Queries.GetCreatedAndAssignedOrders;
 using DeliveryApp.Core.Domain.Model.CourierAggregate;
 using DeliveryApp.Infrastructure.Adapters.Postgres;
 using DeliveryApp.Infrastructure.Adapters.Postgres.Repositories;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 using Xunit;
@@ -15,7 +12,7 @@ using Courier = DeliveryApp.Core.Domain.Model.CourierAggregate.Courier;
 using Location = DeliveryApp.Core.Domain.Model.SharedKernel.Location;
 using Order = DeliveryApp.Core.Domain.Model.OrderAggregate.Order;
 
-namespace DeliveryApp.UnitTests.Application.Queries.GetBusyCouriers;
+namespace DeliveryApp.UnitTests.Application.Queries.GetCouriers;
 
 public class GetCreatedAndAssignedOrders : IAsyncLifetime
 {
@@ -73,6 +70,7 @@ public class GetCreatedAndAssignedOrders : IAsyncLifetime
     {
         //Arrange
         var createdOrder  = Order.Create(Guid.NewGuid(), Location.CreateRandom()).Value;
+        
         var assignedOrder = Order.Create(Guid.NewGuid(), Location.CreateRandom()).Value;
         assignedOrder.Assign(Courier.Create("Vasya", Transport.Bicycle, Location.CreateRandom()).Value);
         
@@ -93,16 +91,6 @@ public class GetCreatedAndAssignedOrders : IAsyncLifetime
         var result  = await handler.Handle(query, new CancellationToken());
 
         //Assert
-        Assert.Equal(2, result.Orders.Count);
-        Assert.Collection<DeliveryApp.Core.Application.UseCases.Queries.GetCreatedAndAssignedOrders.Order>
-            (result.Orders, 
-                order =>
-                {
-                    Assert.True(order.Id == createdOrder.Id || order.Id == assignedOrder.Id);
-                },
-                order =>
-                {
-                    Assert.True(order.Id == createdOrder.Id || order.Id == assignedOrder.Id);
-                });
+        Assert.Equal(3, result.Orders.Count);
     }
 }

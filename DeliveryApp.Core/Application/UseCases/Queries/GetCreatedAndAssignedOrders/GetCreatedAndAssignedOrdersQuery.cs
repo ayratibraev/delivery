@@ -2,7 +2,10 @@
 
 namespace DeliveryApp.Core.Application.UseCases.Queries.GetCreatedAndAssignedOrders;
 
-public class GetCreatedAndAssignedOrdersQuery : IRequest<GetCreatedAndAssignedOrdersHandler>, IRequest<GetCreatedAndAssignedOrdersResponse>
+/// <summary>
+///     Handler <see cref="GetCreatedAndAssignedOrdersHandler"/>
+/// </summary>
+public class GetCreatedAndAssignedOrdersQuery : IRequest<GetCreatedAndAssignedOrdersResponse>
 {
     
 }

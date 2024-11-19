@@ -1,8 +1,8 @@
-﻿namespace DeliveryApp.Core.Application.UseCases.Queries.GetBusyCouriers;
+﻿namespace DeliveryApp.Core.Application.UseCases.Queries.GetCouriers;
 
-public class GetBusyCouriersResponse
+public class GetCouriersResponse
 {
-    public GetBusyCouriersResponse(List<Courier> couriers)
+    public GetCouriersResponse(List<Courier> couriers)
     {
         Couriers = couriers;
     }

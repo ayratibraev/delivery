@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DeliveryApp.Core.Application.UseCases.Queries.GetBusyCouriers;
+using DeliveryApp.Core.Application.UseCases.Queries.GetCouriers;
 using DeliveryApp.Core.Domain.Model.CourierAggregate;
 using DeliveryApp.Infrastructure.Adapters.Postgres;
 using DeliveryApp.Infrastructure.Adapters.Postgres.Repositories;
@@ -80,8 +80,8 @@ public class GetBusyCouriersHandlerShould : IAsyncLifetime
         await unitOfWork.SaveChangesAsync();
 
         //Act
-        var query   = new GetBusyCouriersQuery();
-        var handler = new GetBusyCouriersHandler(_postgreSqlContainer.GetConnectionString());
+        var query   = new GetCouriersQuery();
+        var handler = new GetCouriersHandler(_postgreSqlContainer.GetConnectionString());
         var result  = await handler.Handle(query, new CancellationToken());
 
         //Assert
