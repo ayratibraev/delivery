@@ -12,15 +12,17 @@ namespace DeliveryApp.Core.Application.UseCases.Commands.CreateOrder;
 public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, bool>
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IGeoClient _geoClient;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
     ///     Ctr
     /// </summary>
-    public CreateOrderHandler(IUnitOfWork unitOfWork, IOrderRepository orderRepository)
+    public CreateOrderHandler(IUnitOfWork unitOfWork, IOrderRepository orderRepository, IGeoClient geoClient)
     {
         _unitOfWork      = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
+        _geoClient  = geoClient;
     }
 
     public async Task<bool> Handle(CreateOrderCommand message, CancellationToken cancellationToken)
@@ -29,9 +31,8 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, bool>
         var order = await _orderRepository.GetAsync(message.BasketId);
         if (order != null) return true;
 
-        // TODO: В 7 модуле мы будем передавать Street в сервис Geo и получать Location. Но пока у нас нет этой интеграции - используйте рандомную Location для создания заказа. 
-        var location = Location.CreateRandom();
-
+        var location = await _geoClient.GetGeolocation(message.Street, cancellationToken);
+        
         // Создаем заказ
         var orderCreateResult = Order.Create(message.BasketId, location);
         if (orderCreateResult.IsFailure) return false;
