@@ -21,8 +21,8 @@ public class DeliveryController : DefaultApiController
 
     public override async Task<IActionResult> CreateOrder()
     {
-        var createOrderCommand = new CreateOrderCommand(Guid.NewGuid(), "street");
-        var result = await _mediator.Send(createOrderCommand);
+        var createOrderCommand = new CreateOrderCommand(Guid.NewGuid(), GetValidStreet());
+        var result             = await _mediator.Send(createOrderCommand);
         if (result) return Ok();
         
         return Problem(statusCode: 500);
@@ -65,5 +65,22 @@ public class DeliveryController : DefaultApiController
             });
         
         return Ok(result);
+    }
+
+    private readonly string[] _streets = new[]
+    {
+        "Тестировочная",
+        "Айтишная",
+        "Эйчарная",
+        "Аналитическая",
+        "Нагрузочная",
+        "Серверная",
+        "Мобильная",
+        "Бажная"
+    };
+    
+    private string GetValidStreet()
+    {
+        return _streets[Random.Shared.Next(_streets.Length)];
     }
 }

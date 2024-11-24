@@ -7,7 +7,7 @@
       "applicationUrl": "http://0.0.0.0:8082",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "CONNECTION_STRING": "User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=delivery;Pooling=true;",
+        "CONNECTION_STRING": "User ID=username;Password=secret;Host=localhost;Port=5432;Database=delivery;Pooling=true;",
         "GEO_SERVICE_GRPC_HOST": "http://localhost:5004",
         "MESSAGE_BROKER_HOST": "localhost"
       }

@@ -11,6 +11,7 @@ using DeliveryApp.Core.Application.UseCases.Queries.GetCouriers;
 using DeliveryApp.Core.Application.UseCases.Queries.GetCreatedAndAssignedOrders;
 using DeliveryApp.Core.Domain.Services;
 using DeliveryApp.Core.Ports;
+using DeliveryApp.Infrastructure.Adapters.Grpc.GetService;
 using DeliveryApp.Infrastructure.Adapters.Postgres;
 using DeliveryApp.Infrastructure.Adapters.Postgres.Repositories;
 using MediatR;
@@ -42,6 +43,8 @@ var connectionString = builder.Configuration["CONNECTION_STRING"];
 
 // Domain Services
 builder.Services.AddTransient<IDispatchService, DispatchService>();
+
+builder.Services.AddTransient<IGeoClient, GeoClient>();
 
 // БД, ORM 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -156,10 +159,10 @@ app.UseCors();
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 // Apply Migrations
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//     db.Database.Migrate();
+// }
 
 app.Run();
